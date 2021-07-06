@@ -70,7 +70,7 @@ jobs:
          run: |
            sudo wget https://gist.githubusercontent.com/iam-pro/61f301e7c4875fbe8b41aa3a017e1f4f/raw/860884ca19f98e1b33f790a9c9ac76eca2234f70/local.env -P /app/
            cd /app/
-           sudo bash ./run
+           sudo python3 -m main_startup
        - name: Loop workflow
          continue-on-error: true
          run: |
