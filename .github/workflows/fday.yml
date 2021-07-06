@@ -1,0 +1,82 @@
+name: Friday
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore: 'README.md'
+  workflow_dispatch:
+    
+env:
+  GitHubMail: "iam.pro2@outlook.com"
+  GitHubName: "ProgrammingError"
+  PIP_NO_CACHE_DIR: 1
+  LANG: "C.UTF-8"
+  GOOGLE_CHROME_DRIVER: "/usr/bin/chromedriver"
+  GOOGLE_CHROME_BIN: "/usr/bin/google-chrome-stable"
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+       - name: Setup
+         run: |
+           sudo su
+           sudo -i
+           sudo apt install software-properties-common
+           sudo add-apt-repository ppa:deadsnakes/ppa
+           sudo apt install python3.9
+           sudo rm -rf /usr/bin/python
+           if sudo [ ! -e /usr/bin/python ]; then sudo ln -sf /usr/bin/python3 /usr/bin/python; fi 
+           git config --global user.email ${GitHubMail}
+           git config --global user.name ${GitHubName}
+           git config --global credential.helper store
+           sudo echo "https://${GitHubName}:${{ secrets.GH_TOKEN }}@github.com" > ~/.git-credentials
+           sudo git clone -b alpha https://github.com/iam-pro/USERGE-X.git /app/
+           cd /app/
+           sudo sed -i.bak 's/us-west-2\.ec2\.//' /etc/apt/sources.list
+           sudo apt -qq update && apt -qq upgrade -y && \
+           sudo apt -qq install -y --no-install-recommends \
+           apt-utils \
+           gnupg2 \
+           wget \
+           unzip \
+           procps \
+           tree
+           sudo mkdir -p /tmp/ && \
+           cd /tmp/ && \
+           sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+           sudo dpkg -i ./google-chrome-stable_current_amd64.deb; apt -fqqy install && \
+           sudo rm ./google-chrome-stable_current_amd64.deb
+           sudo mkdir -p /tmp/ && \
+           cd /tmp/ && \
+           sudo wget -O /tmp/chromedriver.zip http://chromedriver.storage.googleapis.com/$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip && \
+           sudo unzip /tmp/chromedriver.zip chromedriver -d /usr/bin/ && \
+           sudo rm /tmp/chromedriver.zip
+           sudo apt -qq update && sudo apt -qq install -y --no-install-recommends \
+           gcc python3-dev zlib1g-dev \
+           apt-transport-https \
+           build-essential coreutils jq pv \
+           ffmpeg mediainfo \
+           neofetch \
+           p7zip-full \
+           libfreetype6-dev libjpeg-dev libpng-dev libgif-dev libwebp-dev && \
+           sudo rm -rf /var/lib/apt/lists /var/cache/apt/archives /tmp/*
+           cd /app/
+           sudo pip3 install -U setuptools wheel && \
+           sudo pip3 install --no-cache-dir -r requirements.txt
+       - name: Running Userge
+         timeout-minutes: 350
+         continue-on-error: true
+         run: |
+           wget https://gist.githubusercontent.com/iam-pro/61f301e7c4875fbe8b41aa3a017e1f4f/raw/860884ca19f98e1b33f790a9c9ac76eca2234f70/local.env /app/config.env
+           cd /app/
+           sudo bash ./run
+       - name: Loop workflow
+         continue-on-error: true
+         run: |
+           git clone -b main https://${{ secrets.GH_TOKEN }}@github.com/${GITHUB_REPOSITORY} loop
+           cd loop || exit 1
+           echo $(( RANDOM - ( RANDOM % RANDOM ) )) > looper.txt
+           git add looper.txt
+           git commit -m "Workflow : Loop at $(date -u +%D-%T%P)"
+           git push -q https://${{ secrets.GH_TOKEN }}@github.com/${GITHUB_REPOSITORY} HEAD:main
