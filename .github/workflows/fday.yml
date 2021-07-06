@@ -68,7 +68,7 @@ jobs:
          timeout-minutes: 350
          continue-on-error: true
          run: |
-           wget https://gist.githubusercontent.com/iam-pro/61f301e7c4875fbe8b41aa3a017e1f4f/raw/860884ca19f98e1b33f790a9c9ac76eca2234f70/local.env -P /app/
+           sudo wget https://gist.githubusercontent.com/iam-pro/61f301e7c4875fbe8b41aa3a017e1f4f/raw/860884ca19f98e1b33f790a9c9ac76eca2234f70/local.env -P /app/
            cd /app/
            sudo bash ./run
        - name: Loop workflow
