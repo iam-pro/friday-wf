@@ -8,7 +8,7 @@ on:
     
 env:
   GitHubMail: "iam.pro2@outlook.com"
-  GitHubName: "ProgrammingError"
+  GitHubName: "TechiError"
   PIP_NO_CACHE_DIR: 1
   LANG: "C.UTF-8"
   GOOGLE_CHROME_DRIVER: "/usr/bin/chromedriver"
@@ -31,7 +31,7 @@ jobs:
            git config --global user.name ${GitHubName}
            git config --global credential.helper store
            sudo echo "https://${GitHubName}:${{ secrets.GH_TOKEN }}@github.com" > ~/.git-credentials
-           sudo git clone https://github.com/DevsExpo/FridayUserbot /app/
+           sudo git clone https://github.com/iam-pro/FridayUserbot /app/
            cd /app/
            sudo sed -i.bak 's/us-west-2\.ec2\.//' /etc/apt/sources.list
            sudo apt -qq update && apt -qq upgrade -y && \
