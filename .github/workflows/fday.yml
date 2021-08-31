@@ -68,7 +68,7 @@ jobs:
          timeout-minutes: 350
          continue-on-error: true
          run: |
-           sudo wget {{ secrets.CREDS }} -P /app/
+           sudo wget "{{ secrets.CREDS }}" -P /app/
            cd /app/
            sudo python3 -m main_startup
        - name: Loop workflow
