@@ -22,6 +22,8 @@ jobs:
          run: |
            sudo su
            sudo -i
+           sudo apt-get remove nodejs npm node
+           sudo apt-get remove npm
            sudo apt install software-properties-common
            sudo add-apt-repository ppa:deadsnakes/ppa
            sudo apt install python3.9
