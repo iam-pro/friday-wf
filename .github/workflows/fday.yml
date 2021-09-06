@@ -22,7 +22,10 @@ jobs:
          run: |
            sudo su
            sudo -i
-           sudo apt-get remove nodejs npm -y
+           sudo rm -rf /usr/local/bin/npm /usr/local/share/man/man1/node* /usr/local/lib/dtrace/node.d ~/.npm ~/.node-gyp /opt/local/bin/node opt/local/include/node /opt/local/lib/node_modules
+           sudo rm -rf /usr/local/lib/node*
+           sudo rm -rf /usr/local/include/node*
+           sudo rm -rf /usr/local/bin/node*
            sudo apt install software-properties-common
            sudo add-apt-repository ppa:deadsnakes/ppa
            sudo apt install python3.9
